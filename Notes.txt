@@ -1,0 +1,283 @@
+Database:
+Data is a record.
+Table
+Columns
+
+Employee
+EmpCode	EmpName	Age	City
+1	Rakesh	50	Delhi
+2	Ajay	21	Bangalore
+
+-DBMS=>DBase=>.dbf
+
+-RDBMS
+Employee-----Primary key
+Department---Foreign Key
+
+
+There are many vendors who provides RDBMS
+=>Oracle
+=>Microsoft
+
+Oracle
+My Sql Server
+MySql
+
+MYSQL:
+
+SQL(Structured query language)
+
+
+show databases;
+
+drop database dxc; ---> to delete the existing database
+
+create database dxc;
+
+use dxc;
+
+create table employee(eid int,ename varchar(50),age int);
+
+desc employee; --->viewing structure of table
+
+insert into employee values(1,'Rakesh',50);
+insert into employee values(2,'Ajay',21),(3,'Ram',23);
+insert into employee(eid,ename,age) values(4,'Anushka',24);
+insert into employee(ename,age) value('Shrishti',34);
+
+select * from employee;
+
+select eid EmployeeID,ename EmployeeName,age EmployeeAge from employee; ----> to change the name of column name
+
+select eid "Employee ID",ename "Employee Name",age "Employee Age" from employee;---->again change like making gap in btwn each column name , so we have to use "" .
+
+select eid as "Employee ID",ename as "Employee Name",age as "Employee Age" from employee;-----> "
+
+select * from employee where age>30;
+
+select * from employee where age>20 and age<40;
+
+select age from employee;
+
+insert into employee values(6,'Tapan',21);
+
+select age from employee;
+
+select distinct age from employee;
+
+--------------------------------------------------------------------------------------------------
+--DDL
+drop table employee;
+select * from employee;
+create table employee(id int primary key,name varchar(40),age int,salary numeric);
+--To add a column in an existing table
+alter table employee
+add column city varchar(20);
+desc employee;
+
+--To delete column from existing table
+alter table employee
+drop column city;
+
+desc employee;
+
+insert into employee values(1,'Rakesh',50,250000000),(2,'Ajay',23,234567);
+select * from employee;
+SET SQL_SAFE_UPDATES = 0;
+delete from employee where age=50;
+delete from employee where age=23;
+
+truncate table employee;
+
+drop table employee;
+
+show tables;
+
+-----------------------------------------------------------------------------------
+Data Types in MYSQl
+1.CHAR
+2.Varchar
+3.Text
+4.Long
+5.BLOB
+6.Boolean
+7.int
+8.FLOAT
+9.DOUBLE
+10.DATE:yyyy-MM-dd
+11.DATETIME
+12.TIME
+13.Year
+
+-----------------------------------------------------------------------------------------
+
+--DML Command
+
+use dxc;
+create table employees(id int primary key,name varchar(40),age int,salary numeric);
+insert into employees values(1,'Rakesh',50,2000000),(2,'Ajay',21,2345),(3,'Vijay',34,5678),
+(4,'Ashish',45,23876),(5,'Sonu',12,0)
+
+select * from employees;
+
+--To count total no of record in table
+select count(*) from employees;
+
+--Creta one more table with same structure
+create table employees_copy(id int primary key,name varchar(40),age int,salary numeric);
+
+select * from employees_copy;
+
+--To insert all record of employee in employees_copy
+insert into employees_copy
+select * from employees;
+
+
+select * from employees_copy;
+
+drop table employees_copy;
+--Update
+update employees set salary=1234,age=18 where id=5;
+
+--Delete the specific record
+delete from employees where id=5;
+
+-----------------------------------------------------------------------------------------
+
+--Constraint
+
+--Not null
+create table emp(id int,name varchar(40) not null,age int);
+insert into emp values(1,'Rakesh',50);
+--This will not inserted
+insert into emp values(2,null,40);
+drop table emp;
+
+--unique
+create table student(id int primary key,name varchar(40),age int,email varchar(60) unique);
+insert into student values(1,'Rakesh',50,'rakesh@gmail.com');
+--This will be not inserted
+insert into student values(2,'Ajay',15,'rakesh@gmail.com');
+drop table student;
+
+--Default constraint
+create table person(id int not null,name varchar(40) not null,age int,
+city varchar(15) default 'delhi');
+insert into person(id,name,age) values(1,'Rakesh',50),(2,'Jay',39);
+select * from person;
+insert into person values(3,'Akash',21,'Ahmedabad');
+drop table person;
+
+--Primary key constraint
+create table persons(id int primary key,name varchar(40),age int);
+insert into persons values(1,'Rakesh',49);
+--primary key can not have duplicate value
+insert into persons values(1,'Rakesh',49);
+insert into persons values(2,'Raj',49);
+alter table persons drop primary key;
+insert into persons values(1,'Rakesh',49);
+drop table persons;
+
+--Auto Increment
+create table animal(id int primary key auto_increment,name varchar(40));
+insert into animal(name) values('Cow'),('Dog'),('Cat');
+select * from animal;
+drop table animal;
+
+--Foreign key constraint
+create table persons(p_id int primary key,name varchar(50) not null,age int,city varchar(25));
+insert into persons values(1,'Rakesh',49,'Delhi'),(2,'Ajay',29,'Bangalore');
+select * from persons;
+
+create table orders(o_id int primary key,o_num int not null,p_id int,foreign key(p_id) 
+references persons(p_id));
+
+--Not inserted because not existing in primary key table
+insert into orders values(1,101,20);
+--inserted
+insert into orders values(1,101,1),(2,102,2);
+
+select * from orders;
+
+--you cannot delete record from parent table untill record is there in child table.
+
+delete from persons where p_id=1;
+--so
+delete from orders where p_id=1;
+delete from persons where p_id=1;
+
+drop table orders;
+drop table persons;
+--------------------------------------------------------------------------------------------------
+
+--Clauses in sql
+
+--Group by
+create table customers(country varchar(40),state varchar(40));
+insert into customers values('USA','NA'),('USA','NY'),('UK','Britain'),('UK','London');
+insert into customers values('japan','Tokyo');
+select * from customers;
+select country,count(state) from customers group by country;
+insert into customers values('USA',null);
+
+--Having
+select country,count(state) from customers where state is not null group by country 
+having count(country)>1;
+
+--Order by
+select * from employees order by name;
+select * from employees order by name asc;
+select * from employees order by name desc;
+
+-------------------------------------------------------------------------------
+
+--Join 
+	--Inner Join
+		Inner join combines records from two tables whenever there are matching values in a field common to both table
+
+	--Outer Join
+		--Right
+		--Left
+
+	--Self Join
+
+--Join
+create table officers(officer_id int primary key,officer_name varchar(50),address varchar(50));
+insert into officers values(1,'Ajeet','Mau'),(2,'Deepika','Lucknow'),(3,'Vimal','Faizabad'),
+(4,'Rahul','Lucknow');
+
+create table students(student_id int primary key,student_name varchar(40),course_name varchar(40));
+
+insert into students values(1,'Aryan','java'),(2,'Rohini','Hadoop'),(3,'Shiva','MySQL'),
+(5,'XYZ','DotNet');
+
+--Inner Join'
+select o.officer_name,o.address,s.course_name
+from officers o
+inner join students s
+on o.officer_id=s.student_id;
+
+--right outer join
+select o.officer_name,o.address,s.course_name
+from officers o
+right join students s
+on o.officer_id=s.student_id;
+
+--left outer join
+select o.officer_name,o.address,s.course_name
+from officers o
+left join students s
+on o.officer_id=s.student_id;
+
+--self join
+create table customer(cid int primary key,cname varchar(40),cmanager int);
+
+insert into customer values(1,'Rakesh',2),(2,'Raj',3),(3,'Ravi',4);
+
+select * from customer;
+
+select a.cid,a.cname,b.cname manager
+from customer a
+inner join customer b
+on a.cmanager=b.cid
+order by a.cid
